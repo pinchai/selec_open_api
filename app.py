@@ -37,11 +37,5 @@ import cli.cli
 import routes
 
 
-@app.get("/admin")
-@login_required
-def admin():
-    return render_template("admin/dashbord.html")
-
-
 if __name__ == '__main__':
     app.run()
