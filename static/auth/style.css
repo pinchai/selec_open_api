@@ -1,0 +1,66 @@
+
+body {
+    min-height: 100vh;
+    background: #f5f7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 960px;
+}
+
+.brand {
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.card {
+    border: 0;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .06);
+}
+
+.form-control {
+    border-radius: .75rem;
+}
+
+.btn {
+    border-radius: .75rem;
+}
+
+.side {
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    border-radius: 1.25rem 0 0 1.25rem;
+    color: #fff;
+}
+
+@media (max-width: 991.98px) {
+    .side {
+        display: none;
+    }
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #6b7280;
+}
+
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.divider:not(:empty)::before {
+    margin-right: .75rem;
+}
+
+.divider:not(:empty)::after {
+    margin-left: .75rem;
+}
