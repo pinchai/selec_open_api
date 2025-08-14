@@ -1,0 +1,115 @@
+{% extends 'admin/master.html' %}
+{% block title %}product{% endblock %}
+{#{% block page_title %}product{% endblock %}#}
+
+{% block content %}
+    <div class="card w-50">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Create product</span>
+        </div>
+        <div class="card-body">
+            <form
+                    action="{{ url_for('create_product') }}"
+                    method="post"
+                    enctype="multipart/form-data"
+            >
+                {#name#}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="e.g., Electronics"
+                           required>
+                </div>
+                {#category#}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                    <select name="category_id" class="form-control">
+                        {% for category in categories %}
+                            <option value="{{ category['id'] }}">{{ category['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {#cost#}
+                <div class="mb-3">
+                    <label for="cost" class="form-label">Cost <span class="text-danger">*</span></label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            id="cost"
+                            name="cost"
+                            value="0"
+                            min="0"
+                            step="any"
+                            required
+                    >
+                </div>
+                {#price#}
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            id="price"
+                            name="price"
+                            value="0"
+                            min="0"
+                            step="any"
+                            required
+                    >
+                </div>
+                {#current_stock#}
+                <div class="mb-3">
+                    <label for="price" class="form-label">Current Stock <span class="text-danger">*</span></label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            id="current_stock"
+                            name="current_stock"
+                            value="0"
+                            required
+                    >
+                </div>
+                {#current_stock#}
+                <div class="mb-3">
+                    <!-- Preview container -->
+                    <div class="mt-2">
+                        <img id="preview" src="" alt="Image preview" class="img-thumbnail"
+                             style="max-width: 200px; display: none;">
+                    </div>
+
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" class="form-control" id="image" name="image"
+                           accept=".png,.jpg,.jpeg,.gif,.webp">
+                    <small class="text-muted">Allowed: png, jpg, jpeg, gif, webp</small>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary float-right">Create</button>
+                    <a href="{{ url_for('product') }}" class="btn btn-danger">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        document.getElementById('image').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('preview');
+
+            if (file) {
+                // Only preview if it's an image
+                if (file.type.startsWith('image/')) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '';
+                    alert('Please select a valid image file.');
+                }
+            } else {
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        });
+    </script>
+{% endblock %}

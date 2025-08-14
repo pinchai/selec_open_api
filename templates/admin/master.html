@@ -76,7 +76,7 @@
 
                     {# category #}
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ 'active' if module == 'category' }}">
+                        <a href="{{ url_for('category') }}" class="nav-link {{ 'active' if module == 'category' }}">
                             <i class="nav-icon fas fa-cubes"></i>
                             <p>
                                 Category
@@ -87,7 +87,7 @@
 
                     {# product #}
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ 'active' if module == 'product' }}">
+                        <a href="{{ url_for('product') }}" class="nav-link {{ 'active' if module == 'product' }}">
                             <i class="nav-icon fab fa-product-hunt"></i>
                             <p>
                                 Product
@@ -151,6 +151,7 @@
 
         <!-- Main content -->
         <div class="content">
+            {% include 'admin/share/flash_message.html' %}
             {% block content %}{% endblock %}
         </div>
     </div>

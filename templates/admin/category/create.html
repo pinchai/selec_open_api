@@ -1,43 +1,66 @@
 {% extends 'admin/master.html' %}
 {% block title %}Category{% endblock %}
-{% block page_title %}Category{% endblock %}
+{#{% block page_title %}Category{% endblock %}#}
 
 {% block content %}
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Create Category</span>
-    </div>
-    <div class="card-body">
-        {# flash messages #}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="alert alert-info mb-3">
-                    {% for m in messages %}
-                        <div>{{ m }}</div>
-                    {% endfor %}
+    <div class="card w-50">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Create Category</span>
+        </div>
+        <div class="card-body">
+            <form
+                    action="{{ url_for('create_category') }}"
+                    method="post"
+                    enctype="multipart/form-data"
+            >
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="e.g., Electronics"
+                           required>
                 </div>
-            {% endif %}
-        {% endwith %}
 
-        <form
-                action="{{ url_for('create_category') }}"
-                method="post"
-                enctype="multipart/form-data"
-        >
-            <div class="mb-3">
-                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="e.g., Electronics" required>
-            </div>
+                <div class="mb-3">
+                    <!-- Preview container -->
+                    <div class="mt-2">
+                        <img id="preview" src="" alt="Image preview" class="img-thumbnail"
+                             style="max-width: 200px; display: none;">
+                    </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label">Image</label>
-                <input type="file" class="form-control" id="image" name="image" accept=".png,.jpg,.jpeg,.gif,.webp">
-                <small class="text-muted">Allowed: png, jpg, jpeg, gif, webp</small>
-            </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a href="{{ url_for('category') }}" class="btn btn-secondary">Cancel</a>
-            </div>
-        </form>
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" class="form-control" id="image" name="image" accept=".png,.jpg,.jpeg,.gif,.webp">
+                    <small class="text-muted">Allowed: png, jpg, jpeg, gif, webp</small>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary float-right">Create</button>
+                    <a href="{{ url_for('category') }}" class="btn btn-danger">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.getElementById('image').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('preview');
+
+            if (file) {
+                // Only preview if it's an image
+                if (file.type.startsWith('image/')) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '';
+                    alert('Please select a valid image file.');
+                }
+            } else {
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        });
+    </script>
 {% endblock %}

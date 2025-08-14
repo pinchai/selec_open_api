@@ -1,0 +1,41 @@
+
+<div id="flash-stack" class="flash-stack">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+      {% set delay = {'success':2000,'info':3000,'warning':4000,'danger':6000}.get(category,3000) %}
+      {% set icon  = {'success':'✅','info':'ℹ️','warning':'⚠️','danger':'❌'}.get(category,'🔔') %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show position-relative mb-0"
+           role="alert"
+           data-timeout="{{ delay }}">
+        <strong class="mr-2">{{ icon }}</strong>
+        {{ msg }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</div>
+<br>
+
+<script>
+  // Auto-close with graceful fallback if Bootstrap JS isn't present
+  (function(){
+    var alerts = document.querySelectorAll('#flash-stack .alert');
+    alerts.forEach(function(el){
+      var timeout = parseInt(el.getAttribute('data-timeout') || '3000', 10);
+      setTimeout(function(){
+        if (window.jQuery && typeof jQuery.fn.alert === 'function') {
+          // Bootstrap 4 API
+          jQuery(el).alert('close');
+        } else {
+          // Fallback: fade out then remove
+          el.classList.remove('show');
+          setTimeout(function(){ if (el && el.parentNode) el.parentNode.removeChild(el); }, 150);
+        }
+      }, timeout);
+    });
+  })();
+</script>
