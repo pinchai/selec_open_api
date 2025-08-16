@@ -18,6 +18,13 @@ app.config['MAIL_DEFAULT_SENDER'] = 'limsopheak703@gmail.com'
 mail = Mail(app)
 
 
+@app.context_processor
+def inject_base_url():
+    return {
+        "base_url": request.url_root.rstrip("/")
+    }
+
+
 @app.get('/sendMail')
 def send_mail():
     msg = Message('Hello My Love', recipients=['pinchai.pc@gmail.com'])
@@ -31,15 +38,10 @@ def send_mail():
         return f'An error occurred: {str(e)}'
 
 
-@app.get('/pos')
-def pos():
-    return render_template('POS/pos.html')
-
 # ---------- CLI ----------
 import cli.cli
 # ---------- Route ----------
 import routes
-
 
 if __name__ == '__main__':
     app.run()

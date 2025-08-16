@@ -10,7 +10,6 @@ from pathlib import Path
 from werkzeug.utils import secure_filename
 
 
-
 @app.get("/admin/product")
 @login_required
 def product():
@@ -223,3 +222,17 @@ def delete_product():
     execute("DELETE FROM product WHERE id = ? AND user_id = ?", (product_id, user_id))
     flash("Product deleted successfully.", "info")
     return redirect(url_for("product"))
+
+
+def getList(user_id):
+    return query(
+        """
+        SELECT p.*, c.name AS category_name
+        FROM product p
+        JOIN category c ON p.category_id = c.id
+        WHERE p.user_id = ?
+        ORDER BY p.id DESC
+        """,
+        (user_id,),
+        one=False,
+    )

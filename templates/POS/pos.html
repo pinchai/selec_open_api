@@ -62,7 +62,7 @@
                         class="brand-text font-weight-light"
                         style="font-family: Moul;font-size: 50px; color: white"
                 >
-                    Don't Thai To Me Mart 🐣🐸🥬
+                    Mini Mart
                 </span>
                 </marquee>
             </div>
@@ -122,19 +122,19 @@
                                             <span class="discount mt-1">-0%</span>
                                         </div>
                                     </div>
-                                    <img :src="'/static/product/product1.jpg'"
-                                         class="img-fluid rounded thumbnail-image">
+                                    <center>
+                                        <img
+                                                :src="'/static/uploads/product/'+item.image"
+                                                class="img-fluid rounded thumbnail-image"
+                                                style="height: 150px; object-fit: contain"
+                                        >
+                                    </center>
                                 </div>
                                 <div class="product-detail-container p-2">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="dress-name" style="text-transform: uppercase">[[ item.name ]]</h5>
-                                        <div class="d-flex flex-column mb-2">
-                                            <span
-                                                    class="new-price"
-                                                    style="font-size: 18px; background-color: yellow; color: red"
-                                            >[[ item.price ]] $</span>
-                                        </div>
-                                    </div>
+                                    <h5 class="dress-name" style="text-transform: uppercase">[[ item.name ]]</h5>
+                                    <span
+                                            style="font-size: 18px; background-color: yellow; color: red"
+                                    >[[ item.price ]] $</span>
                                     <div class="d-flex justify-content-between align-items-center pt-1">
                                         <div>
                                             <i class="fa fa-star-o rating-star"></i>
@@ -275,20 +275,23 @@
             received_amount: 0,
             change_amount: 0,
         },
-        created() {},
+        created() {
+        },
         mounted() {
             this.fetchData()
         },
         methods: {
             fetchData() {
                 let vm = this
-                let api_url = "http://127.0.0.1:5000/pos/get-data"
+                let api_url = "{{ base_url }}/pos/get-data"
+                console.log(api_url)
+
                 $.LoadingOverlay("show");
                 axios.get(api_url)
                     .then(function (response) {
-                        vm.product_list_old = response.data.product_list
+                        vm.product_list_old = response.data.product
                         vm.product_list = vm.product_list_old
-                        vm.category_list = response.data.category_list
+                        vm.category_list = response.data.category
                         $.LoadingOverlay("hide");
                     })
                     .catch(function (error) {
