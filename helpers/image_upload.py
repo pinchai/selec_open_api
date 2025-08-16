@@ -12,6 +12,7 @@ def get_upload_root(folder: str = "category"):
         os.path.join(current_app.root_path, "static", "uploads", folder),
     )
 
+
 def remove_file_if_exists(filename: str, folder: str = "category"):
     if not filename:
         return

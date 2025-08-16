@@ -31,6 +31,10 @@ def send_mail():
         return f'An error occurred: {str(e)}'
 
 
+@app.get('/pos')
+def pos():
+    return render_template('POS/pos.html')
+
 # ---------- CLI ----------
 import cli.cli
 # ---------- Route ----------
