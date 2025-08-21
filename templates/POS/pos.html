@@ -53,9 +53,11 @@
         {#slide show#}
         <nav class="main-header navbar navbar-expand-md bg-info p-0 m-0">
             <div class="container-fluid p-0 m-0">
-                <a href="https://clinic.phama-tech.com/admin" class="navbar-brand">
-                    <img src="https://i.pinimg.com/originals/6e/cb/91/6ecb91e73eab30f51b0b29a880338147.png"
-                         style="width: 50px;height: 50px;border-radius: 50%">
+                <a href="{{ url_for('admin') }}" class="navbar-brand">
+                    <img
+                            src="{{ url_for('static', filename='image/setec_logo.png') }}"
+                            style="max-height: 50px;border-radius: 5px"
+                    >
                 </a>
                 <marquee>
                 <span

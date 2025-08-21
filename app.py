@@ -1,4 +1,8 @@
-from flask import Flask, render_template
+from datetime import datetime
+
+from flask import Flask, render_template, make_response
+import pdfkit
+
 from helpers.main import *
 import os
 from flask_mail import Mail, Message
@@ -21,7 +25,9 @@ mail = Mail(app)
 @app.context_processor
 def inject_base_url():
     return {
-        "base_url": request.url_root.rstrip("/")
+        "base_url": request.url_root.rstrip("/"),
+        "get_date_now": datetime.now().strftime("%Y-%m-%d"),
+        "get_time_now": datetime.now().strftime("%H:%M:%S"),
     }
 
 
@@ -36,6 +42,34 @@ def send_mail():
         return 'Mail sent!'
     except Exception as e:
         return f'An error occurred: {str(e)}'
+
+
+@app.route("/pdf")
+def download_pdf_wk():
+    html = render_template("POS/invoice.html", title="My Report", rows=[])
+    # Point to the wkhtmltopdf binary if not on PATH:
+    # config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
+    options = {
+        "page-width": "80mm",
+        "page-height": "150mm",
+        "encoding": "UTF-8",
+        "margin-top": "1mm",
+        "margin-right": "1mm",
+        "margin-left": "1mm",
+        "margin-bottom": "1mm",
+
+        "enable-local-file-access": None,
+    }
+    pdf_bytes = pdfkit.from_string(html, False, options=options)  # , configuration=config)
+
+    resp = make_response(pdf_bytes)
+    resp.headers["Content-Type"] = "application/pdf"
+    # Set the Content-Disposition header to prompt download
+    # resp.headers["Content-Disposition"] = 'attachment; filename="report.pdf"'
+
+    # Set the Content-Disposition header to display inline
+    resp.headers["Content-Disposition"] = 'inline; filename="report.pdf"'
+    return resp
 
 
 # ---------- CLI ----------
