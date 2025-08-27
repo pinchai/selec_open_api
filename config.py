@@ -39,8 +39,9 @@ def query(sql, params=(), one=False):
     return (rows[0] if rows else None) if one else rows
 
 
-def execute(sql, params=()):
+def execute(sql, params=(), commit=True):
     db = get_db()
     cur = db.execute(sql, params)
-    db.commit()
+    if commit:
+        db.commit()
     return cur.lastrowid

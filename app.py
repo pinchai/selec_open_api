@@ -9,7 +9,8 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__)
 app.config.update(
-    SECRET_KEY="dev-secret",
+    SECRET_KEY="a7bae17a59474ba8cb365edb9feb62b12e4034da0d2529ea3c8b48014a761303",
+    # SECRET_KEY=os.urandom(32).hex(),
     DATABASE=os.path.join(app.root_path, "flask_open_api.db")
 )
 
@@ -43,33 +44,33 @@ def send_mail():
     except Exception as e:
         return f'An error occurred: {str(e)}'
 
-
-@app.route("/pdf")
-def download_pdf_wk():
-    html = render_template("POS/invoice.html", title="My Report", rows=[])
-    # Point to the wkhtmltopdf binary if not on PATH:
-    # config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
-    options = {
-        "page-width": "80mm",
-        "page-height": "150mm",
-        "encoding": "UTF-8",
-        "margin-top": "1mm",
-        "margin-right": "1mm",
-        "margin-left": "1mm",
-        "margin-bottom": "1mm",
-
-        "enable-local-file-access": None,
-    }
-    pdf_bytes = pdfkit.from_string(html, False, options=options)  # , configuration=config)
-
-    resp = make_response(pdf_bytes)
-    resp.headers["Content-Type"] = "application/pdf"
-    # Set the Content-Disposition header to prompt download
-    # resp.headers["Content-Disposition"] = 'attachment; filename="report.pdf"'
-
-    # Set the Content-Disposition header to display inline
-    resp.headers["Content-Disposition"] = 'inline; filename="report.pdf"'
-    return resp
+#
+# @app.route("/pdf")
+# def download_pdf_wk():
+#     html = render_template("POS/invoice.html", title="My Report", rows=[])
+#     # Point to the wkhtmltopdf binary if not on PATH:
+#     # config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
+#     options = {
+#         "page-width": "80mm",
+#         "page-height": "150mm",
+#         "encoding": "UTF-8",
+#         "margin-top": "1mm",
+#         "margin-right": "1mm",
+#         "margin-left": "1mm",
+#         "margin-bottom": "1mm",
+#
+#         "enable-local-file-access": None,
+#     }
+#     pdf_bytes = pdfkit.from_string(html, False, options=options)  # , configuration=config)
+#
+#     resp = make_response(pdf_bytes)
+#     resp.headers["Content-Type"] = "application/pdf"
+#     # Set the Content-Disposition header to prompt download
+#     # resp.headers["Content-Disposition"] = 'attachment; filename="report.pdf"'
+#
+#     # Set the Content-Disposition header to display inline
+#     resp.headers["Content-Disposition"] = 'inline; filename="report.pdf"'
+#     return resp
 
 
 # ---------- CLI ----------

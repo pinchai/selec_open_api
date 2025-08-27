@@ -148,14 +148,13 @@
         src="{{ base_url+url_for('static', filename='image/setec_logo.png') }}"
         alt="SETEC Logo"
 />
-<strong>Invoice Number : 4910487129047124</strong>
+<strong>Invoice Number : INV-{{ sale['id'] }}</strong>
 
 {# Header #}
 <table class="bill-details">
     <tbody>
     <tr>
-        <td><strong>Date</strong> : <i>{{ get_date_now }}</i></td>
-        <td><strong>Time</strong> : <i>{{ get_time_now }}</i></td>
+        <td><strong>DateTime</strong> : <i>{{ sale['order_date_time'] }}</i></td>
     </tr>
     <tr>
         <th class="center-align" colspan="2"><span class="receipt">Receipt</span></th>
@@ -172,19 +171,21 @@
         >
             Item
         </th>
-        <th class="heading qty">Qty</th>
-        <th class="heading rate">Rate</th>
-        <th class="heading amount">Amount</th>
+        <th class="heading qty">Quantity</th>
+        <th class="heading rate">Price</th>
+        <th class="heading amount">Total</th>
     </tr>
     </thead>
 
     <tbody>
-    {% for item in range(10) %}
+    {% for item in rows %}
         <tr>
-            <td>{{ item + 1 }}. Coca</td>
-            <td>1</td>
-            <td>0.5</td>
-            <td>0.5</td>
+            <td>{{ loop.index }}. {{ item['name'] }}</td>
+            <td>{{ item['qty'] }}</td>
+            <td>{{ item['price'] }} $</td>
+            <td>
+                <strong>{{ item['qty'] * item['price'] }} $</strong>
+            </td>
         </tr>
     {% endfor %}
 
@@ -192,16 +193,14 @@
     <tr>
         <td colspan="4" style="text-align: right">
             <hr>
-            <strong>1.0$</strong>
+            <h2>Grand: Total: {{ sale['total'] }}$ | {{ sale['total']*4100 }}៛</h2>
+            <h3> Paid by : <i>CASH</i></h3>
         </td>
     </tr>
     </tbody>
 </table>
 
 <section>
-    <p>
-        Paid by : <span>CASH</span>
-    </p>
     <p style="text-align:center">
         Thank you for your visit!
     </p>

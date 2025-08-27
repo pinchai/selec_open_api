@@ -7,6 +7,7 @@ import sqlite3
 from config import *
 from flask_mail import Mail, Message
 
+
 @app.get("/register")
 def register():
     return render_template("auth/register.html")
@@ -110,6 +111,7 @@ def do_login():
     session["user_name"] = 'sample_user'
     session["user_email"] = user["email"]
     session["ip"] = request.remote_addr  # Store login IP
+    session["browser"] = f"{request.user_agent}".strip()
     session.permanent = bool(remember)
 
     flash("Welcome back!")

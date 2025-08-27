@@ -47,7 +47,9 @@ DROP TABLE IF EXISTS sale_order_item;
 CREATE TABLE sale_order_item (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
     qty INTEGER NOT NULL,
+    cost DECIMAL(10, 2) NOT NULL,
     price DECIMAL(10, 2) NOT NULL
 );
 

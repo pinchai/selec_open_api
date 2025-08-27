@@ -31,69 +31,57 @@ def get_data():
         'product': product,
     }
 
-#
-# @app.post("/pos/create-sale")
-# @login_required
-# def create_sale():
-#     user_id = session.get("user_id", "")
-#     name = (request.form.get("name") or "").strip()
-#     category_id = (request.form.get("category_id") or "").strip()
-#     cost = (request.form.get("cost") or "").strip() or None
-#     price = (request.form.get("price") or "").strip() or None
-#     stock = (request.form.get("current_stock") or "0").strip()
-#     description = (request.form.get("description") or "").strip()
-#
-#     if not name:
-#         flash("Product name is required.", 'danger')
-#         return redirect(url_for("product"))
-#     if not category_id.isdigit():
-#         flash("Valid category is required.", 'danger')
-#         return redirect(url_for("index_product"))
-#
-#     # Handle image upload (same style as category create)
-#     file = request.files.get("image")
-#     image_filename = None
-#
-#     if file and file.filename:
-#         allowed_ext = {"png", "jpg", "jpeg", "gif", "webp"}
-#         ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
-#         if ext not in allowed_ext:
-#             flash("Invalid image type. Allowed: png, jpg, jpeg, gif, webp", 'danger')
-#             return redirect(url_for("index_product"))
-#
-#         upload_root = current_app.config.get(
-#             "UPLOAD_FOLDER",
-#             os.path.join(current_app.root_path, "static", "uploads", "product"),
-#         )
-#         Path(upload_root).mkdir(parents=True, exist_ok=True)
-#
-#         unique_name = f"{uuid.uuid4().hex}.{ext}"
-#         safe_name = secure_filename(unique_name)
-#         save_path = os.path.join(upload_root, safe_name)
-#         try:
-#             file.save(save_path)
-#             image_filename = safe_name
-#         except Exception as e:
-#             current_app.logger.exception("Image upload failed: %s", e)
-#             flash("Failed to upload image. Please try again.", 'danger')
-#             return redirect(url_for("index_product"))
-#
-#     execute(
-#         """
-#         INSERT INTO product (name, category_id, cost, price, image, current_stock, description, user_id)
-#         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-#         """,
-#         (
-#             name,
-#             int(category_id),
-#             cost,
-#             price,
-#             image_filename,
-#             int(stock or 0),
-#             description,
-#             user_id,
-#         ),
-#     )
-#
-#     flash("Product created successfully.", 'success')
-#     return redirect(url_for("product"))
+
+@app.post("/pos/create-sale")
+@login_required
+def create_sale():
+    from datetime import datetime
+    from  config import get_db
+    now = datetime.now()
+    user_id = session.get("user_id", "")
+    data = request.get_json()
+    sale_list = data.get('selected_product')
+    total_amount = data.get('total_amount')
+    received_amount = data.get('received_amount')
+
+    get_db().execute('begin transaction;')
+    sale_id = execute(
+        """
+        INSERT INTO sale_order (order_date_time, total, paid, user_id)
+        VALUES (?, ?, ?, ?)
+        """,
+        (
+            now.strftime("%Y-%m-%d %H:%M:%S"),
+            float(total_amount),
+            float(received_amount),
+            user_id
+        ),
+        commit=False
+    )
+    for sale in sale_list:
+        product_id = sale.get('id')
+        quantity = sale.get('qty')
+        cost = 0
+        price = sale.get('price')
+        execute(
+            """
+            INSERT INTO sale_order_item (order_id, product_id, qty, cost, price)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                sale_id,
+                int(product_id),
+                int(quantity),
+                float(cost),
+                float(price),
+            ),
+            commit=False
+        )
+    get_db().execute('commit')
+
+    return jsonify(
+        {
+            "status": "success",
+            "sale_id": sale_id,
+        }
+    ), 200

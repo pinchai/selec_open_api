@@ -286,7 +286,6 @@
             fetchData() {
                 let vm = this
                 let api_url = "{{ base_url }}/pos/get-data"
-                console.log(api_url)
 
                 $.LoadingOverlay("show");
                 axios.get(api_url)
@@ -305,7 +304,6 @@
                     })
             },
             addToList(item) {
-
                 let current_product = {
                     id: item.id,
                     name: item.name,
@@ -418,7 +416,7 @@
 
                 //send data to api server
                 let vm = this
-                let api_url = "http://127.0.0.1:5000/pos/payment"
+                let api_url = "{{ base_url }}/pos/create-sale"
                 let input = {
                     selected_product: vm.selected_product,
                     total_amount: parseFloat(vm.subTotal),
@@ -429,18 +427,17 @@
                 axios.post(api_url, input)
                     .then(function (response) {
                         $.LoadingOverlay("hide");
-                        console.log(response.status)
                         if (response.status == 200) {
                             Swal.fire({
                                 icon: "success",
                                 title: "Completed",
                                 text: "Payment successes",
                             });
-
+                            console.log(response)
                             //reset sale
-                            vm.sound('success')
-                            vm.selected_product = []
-                            vm.received_amount = 0
+                            {#vm.sound('success')#}
+                            {#vm.selected_product = []#}
+                            {#vm.received_amount = 0#}
                         }
 
                     })
