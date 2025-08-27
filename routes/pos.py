@@ -36,7 +36,7 @@ def get_data():
 @login_required
 def create_sale():
     from datetime import datetime
-    from  config import get_db
+    from config import get_db
     now = datetime.now()
     user_id = session.get("user_id", "")
     data = request.get_json()

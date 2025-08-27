@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Invoice INV-{{ sale['id'] }}</title>
+  <style>
+    /* ---------- Page setup: A4 with print-friendly margins ---------- */
+    @page {
+      size: A4;
+      margin: 12mm 12mm 14mm 12mm; /* top right bottom left */
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "PT Sans", Arial, sans-serif;
+      font-size: 11.5px;
+      color: #222;
+    }
+
+    /* ---------- Layout ---------- */
+    .invoice {
+      max-width: 750px; /* looks nice on screen, print ignores width */
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    #logo {
+      display: block;
+      margin: 0 auto 6px;
+      height: 60px;          /* keep small for print quality */
+      max-width: 220px;
+      object-fit: contain;
+    }
+    .meta {
+      width: 100%;
+      margin-top: 6px;
+      border-collapse: collapse;
+    }
+    .meta td {
+      padding: 2px 0;
+      vertical-align: top;
+    }
+    .meta .label { color: #555; }
+
+    h1.title {
+      font-size: 18px;
+      letter-spacing: 0.5px;
+      margin: 6px 0 4px;
+    }
+    .subtle {
+      color: #666;
+      font-size: 10.5px;
+    }
+    .hr {
+      height: 1px;
+      background: #000;
+      margin: 10px 0;
+    }
+
+    /* ---------- Items table ---------- */
+    table.items {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .items thead th {
+      font-size: 11px;
+      text-transform: uppercase;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 6px 4px;
+      text-align: right;
+    }
+    .items thead th:first-child,
+    .items tbody td:first-child {
+      text-align: left;
+    }
+    .items tbody td {
+      padding: 6px 4px;
+      border-bottom: 1px dashed #bdbdbd;
+      vertical-align: bottom;
+      word-break: break-word;
+    }
+
+    /* Column widths for reliable print layout */
+    .col-name  { width: 48%; float: none}
+    .col-qty   { width: 10%; float: none}
+    .col-price { width: 18%; float: none}
+    .col-total { width: 24%; float: none}
+
+    /* ---------- Totals ---------- */
+    .totals {
+      width: 100%;
+      margin-top: 8px;
+      border-collapse: collapse;
+    }
+    .totals td {
+      padding: 6px 4px;
+      text-align: right;
+    }
+    .totals .label {
+      color: #444;
+      font-weight: 600;
+    }
+    .totals .sep {
+      border-top: 1px dashed #000;
+    }
+    .grand {
+      font-size: 13px;
+      font-weight: 700;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 10.5px;
+      color: #555;
+    }
+
+    /* ---------- Print controls ---------- */
+    thead { display: table-header-group; }   /* repeat headers on page break */
+    tfoot { display: table-footer-group; }
+    tr, img, table, p, h1, h2, h3 { page-break-inside: avoid; }
+
+    /* ---------- Optional currency helpers ---------- */
+    .money { white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+  <div class="invoice">
+    <header>
+      <img
+        id="logo"
+        src="{{ base_url + url_for('static', filename='image/setec_logo.png') }}"
+        alt="Logo"
+      />
+      <h1 class="title">INVOICE</h1>
+      <div class="subtle">Invoice No: <strong>INV-{{ sale['id'] }}</strong></div>
+    </header>
+
+    <table class="meta">
+      <tbody>
+        <tr>
+          <td class="label"><strong>Date &amp; Time</strong></td>
+          <td>: <i>{{ sale['order_date_time'] }}</i></td>
+        </tr>
+
+        <tr>
+          <td class="label"><strong>Customer</strong></td>
+          <td>: {{ sale['customer_name'] }}</td>
+        </tr>
+
+        <tr>
+          <td class="label"><strong>Cashier</strong></td>
+          <td>: {{ sale['cashier'] }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="hr"></div>
+
+    <!-- Items -->
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="col-name">Item</th>
+          <th class="col-qty">Qty</th>
+          <th class="col-price">Price</th>
+          <th class="col-total">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in sale_item %}
+        <tr>
+          <td class="col-name">{{ loop.index }}. {{ item['name'] }}</td>
+          <td class="col-qty">{{ item['qty'] }}</td>
+          <td class="col-price money">{{ "%.2f"|format(item['price']) }} $</td>
+          <td class="col-total money"><strong>{{ "%.2f"|format(item['qty'] * item['price']) }} $</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Totals -->
+    <table class="totals">
+      <tbody>
+        <tr>
+          <td class="label">Subtotal</td>
+          <td class="money">0 $</td>
+        </tr>
+        <tr>
+          <td class="label">Discount</td>
+          <td class="money">- 0 $</td>
+        </tr>
+        <tr>
+          <td class="label">Tax</td>
+          <td class="money">0 $</td>
+        </tr>
+        <tr class="sep">
+          <td class="label">Grand Total (USD)</td>
+          <td class="money grand">{{ "%.2f"|format(sale['total']) }} $</td>
+        </tr>
+        <tr>
+          <td class="label">Grand Total (KHR)</td>
+          <td class="money"><strong>{{ (sale['total'] * 4100)|round(0, 'floor')|int }} ៛</strong></td>
+        </tr>
+        <tr>
+          <td class="label">Paid By</td>
+          <td class="money"><i>CASH</i></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer>
+      <p>Thank you for your visit!</p>
+    </footer>
+  </div>
+
+</body>
+</html>

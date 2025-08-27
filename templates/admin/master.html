@@ -98,7 +98,7 @@
 
                     {# order #}
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ 'active' if module == 'sale_order_list' }}">
+                        <a href="{{ url_for('sale_list') }}" class="nav-link {{ 'active' if module == 'sale_order_list' }}">
                             <i class="nav-icon fab fa-first-order"></i>
                             <p>
                                 Sale Order List
@@ -109,7 +109,7 @@
 
                     {# POS #}
                     <li class="nav-item">
-                        <a href="{{ url_for('pos') }}" class="nav-link {{ 'active' if module == 'pos' }}">
+                        <a target="_blank" href="{{ url_for('pos') }}" class="nav-link {{ 'active' if module == 'pos' }}">
                             <i class="nav-icon fas fa-cash-register"></i>
                             <p>
                                 POS Screen
