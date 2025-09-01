@@ -434,6 +434,8 @@
                                 text: "Payment successes",
                             });
                             console.log(response)
+                            let url = `{{ base_url }}/pdf?sale_id=${response.data.sale_id}&type=inline`
+                            window.open(url, "_blank")
                             //reset sale
                             {#vm.sound('success')#}
                             {#vm.selected_product = []#}

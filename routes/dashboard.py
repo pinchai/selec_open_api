@@ -10,6 +10,7 @@ def admin():
     category = query("SELECT COUNT(*) FROM category where user_id = ?", (user_id,), one=True)
     product = query("SELECT COUNT(*) FROM product where user_id = ?", (user_id,), one=True)
     sale_order = query("SELECT COUNT(*) FROM sale_order where user_id = ?", (user_id,), one=True)
+    # assert False, pprint(session)
     return render_template(
         "admin/dashboard.html",
         module='dashboard',
