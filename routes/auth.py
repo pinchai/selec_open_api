@@ -93,6 +93,8 @@ def do_login():
         return redirect(url_for("login"))
 
     user = query("SELECT * FROM user WHERE email = ?", (email,), one=True)
+
+
     if not user:
         flash("User not found.")
         return redirect(url_for("login"))

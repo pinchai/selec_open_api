@@ -19,7 +19,7 @@ def index():
 @login_required
 def category():
     user_id = session.get("user_id", "")
-    categories = query("SELECT * FROM category WHERE user_id = ?", (user_id,), one=False)
+    categories = query("SELECT id, UPPER(name) as name, image FROM category WHERE user_id = ?", (user_id,), one=False)
     return render_template(
         "admin/category/category.html",
         module='category',

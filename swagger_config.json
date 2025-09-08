@@ -1,0 +1,18 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SETEC-OPEN-API",
+    "description": "This API powers my POS & e-commerce system",
+    "version": "1.2.3",
+    "termsOfService": "https://example.com/tos",
+    "contact": {
+      "name": "chai",
+      "url": "https://example.com/support",
+      "email": "support@example.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  }
+}

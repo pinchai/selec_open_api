@@ -1,13 +1,7 @@
 from app import app
-from flask import render_template, session, jsonify, request, redirect, url_for, flash, current_app
-
-from helpers.image_upload import save_image, remove_file_if_exists
+from flask import render_template, session, jsonify, request
 from helpers.main import login_required
-from config import query, execute
-import os
-import uuid
-from pathlib import Path
-from werkzeug.utils import secure_filename
+from config import execute
 
 
 @app.get('/pos')

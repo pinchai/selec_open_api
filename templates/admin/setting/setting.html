@@ -1,0 +1,32 @@
+{% extends 'admin/master.html' %}
+{% block title %}Setting{% endblock %}
+{#{% block page_title %}Category{% endblock %}#}
+
+{% block content %}
+    <div class="card w-50">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Setting</span>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label
+                        for="name"
+                        class="form-label"
+                >
+                    Token<span class="text-danger">*</span>({{ token_status }})
+                </label>
+                <input
+                        value="{{ setting['token'] }}"
+                        type="text"
+                        class="form-control"
+                        id="token"
+                        name="token"
+                        placeholder="token"
+                        readonly
+                >
+                <a href="{{ url_for('generate_token') }}" class="btn btn-sm btn-primary mt-2">Regenerate Token</a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,13 +1,20 @@
 from datetime import datetime
 
-from flask import Flask, render_template, make_response
+from flask import Flask, render_template, make_response, jsonify
 import pdfkit
 
 from helpers.main import *
 import os
 from flask_mail import Mail, Message
-
+from flasgger import Swagger
+import json
 app = Flask(__name__)
+
+
+# config swagger header
+with open("swagger_config.json", "r") as f:
+    swagger_template = json.load(f)
+swagger = Swagger(app, template=swagger_template)
 app.config.update(
     SECRET_KEY="a7bae17a59474ba8cb365edb9feb62b12e4034da0d2529ea3c8b48014a761303",
     # SECRET_KEY=os.urandom(32).hex(),
@@ -32,6 +39,22 @@ def inject_base_url():
     }
 
 
+@app.errorhandler(Exception)
+def error_handler(e):
+    return make_response(
+        jsonify({"status": "error", "message": str(e)}),
+        500
+    )
+
+
+@app.errorhandler(404)
+def error_handler(e):
+    return make_response(
+        jsonify({"status": "page not 404", "message": str(e)}),
+        404
+    )
+
+
 @app.get('/sendMail')
 def send_mail():
     msg = Message('Hello My Love', recipients=['pinchai.pc@gmail.com'])
@@ -44,38 +67,10 @@ def send_mail():
     except Exception as e:
         return f'An error occurred: {str(e)}'
 
-#
-# @app.route("/pdf")
-# def download_pdf_wk():
-#     html = render_template("POS/invoice.html", title="My Report", rows=[])
-#     # Point to the wkhtmltopdf binary if not on PATH:
-#     # config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
-#     options = {
-#         "page-width": "80mm",
-#         "page-height": "150mm",
-#         "encoding": "UTF-8",
-#         "margin-top": "1mm",
-#         "margin-right": "1mm",
-#         "margin-left": "1mm",
-#         "margin-bottom": "1mm",
-#
-#         "enable-local-file-access": None,
-#     }
-#     pdf_bytes = pdfkit.from_string(html, False, options=options)  # , configuration=config)
-#
-#     resp = make_response(pdf_bytes)
-#     resp.headers["Content-Type"] = "application/pdf"
-#     # Set the Content-Disposition header to prompt download
-#     # resp.headers["Content-Disposition"] = 'attachment; filename="report.pdf"'
-#
-#     # Set the Content-Disposition header to display inline
-#     resp.headers["Content-Disposition"] = 'inline; filename="report.pdf"'
-#     return resp
 
 
-# ---------- CLI ----------
+
 import cli.cli
-# ---------- Route ----------
 import routes
 
 if __name__ == '__main__':

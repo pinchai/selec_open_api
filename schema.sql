@@ -5,6 +5,7 @@ CREATE TABLE user (
   password TEXT NOT NULL UNIQUE,
   verify NUMERIC NOT NULL DEFAULT 0,
   verify_code NUMERIC NOT NULL,
+  token TEXT UNIQUE,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -47,10 +48,10 @@ DROP TABLE IF EXISTS sale_order_item;
 CREATE TABLE sale_order_item (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
+    product_id INTEGER Null,
     qty INTEGER NOT NULL,
-    cost DECIMAL(10, 2) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL
+    cost DECIMAL(10, 2) NULL,
+    price DECIMAL(10, 2) NULL
 );
 
 

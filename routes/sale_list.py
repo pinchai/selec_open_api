@@ -43,6 +43,5 @@ def sale_list_detail():
     )
 
 
-
 def getList(user_id):
     return query("SELECT * FROM category WHERE user_id = ?", (user_id,), one=False)

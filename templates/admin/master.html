@@ -120,10 +120,21 @@
 
                     {# setting #}
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ url_for('setting') }}" class="nav-link {{ 'active' if module == 'setting' }}">
                             <i class="nav-icon fas fa-wrench"></i>
                             <p>
                                 Setting
+                                <span class="right badge badge-danger"></span>
+                            </p>
+                        </a>
+                    </li>
+
+                       {# api_doc #}
+                    <li class="nav-item">
+                        <a href="{{ url_for('api_doc') }}" class="nav-link {{ 'active' if module == 'api_doc' }}">
+                            <i class="nav-icon fas fa-mobile"></i>
+                            <p>
+                                API Documentation
                                 <span class="right badge badge-danger"></span>
                             </p>
                         </a>
