@@ -8,8 +8,21 @@ import os
 from flask_mail import Mail, Message
 from flasgger import Swagger
 import json
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+import logging
+
 app = Flask(__name__)
 
+# configure file logging
+# logging.basicConfig(
+#     filename="flask_app.log",
+#     level=logging.DEBUG,
+#     format="%(asctime)s - %(levelname)s - %(message)s"
+# )
+
+# Secret key for signing JWTs
+app.config["JWT_SECRET_KEY"] = "a7bae17a59474ba8cb365edb9feb62b12e4034da0d2529ea3c8b48014a761303"
+jwt = JWTManager(app)
 
 # config swagger header
 with open("swagger_config.json", "r") as f:
@@ -39,12 +52,12 @@ def inject_base_url():
     }
 
 
-@app.errorhandler(Exception)
-def error_handler(e):
-    return make_response(
-        jsonify({"status": "error", "message": str(e)}),
-        500
-    )
+# @app.errorhandler(Exception)
+# def error_handler(e):
+#     return make_response(
+#         jsonify({"status": "error", "message": str(e)}),
+#         500
+#     )
 
 
 @app.errorhandler(404)
@@ -68,6 +81,17 @@ def send_mail():
         return f'An error occurred: {str(e)}'
 
 
+# Mock login route
+# @app.post("/api/login")
+# def jwt_login():
+#     email = request.json.get("email")
+#     password = request.json.get("password")
+#     assert False, f"{email} - {password}"
+#
+#     if username == "chai" and password == "1234":
+#         token = create_access_token(identity=username)
+#         return jsonify(access_token=token)
+#     return jsonify({"msg": "Bad username or password"}), 401
 
 
 import cli.cli

@@ -9,6 +9,6 @@ from routes.setting import *
 from routes.api_doc import *
 
 # API
-from routes.api.user import *
+from routes.api.jwt_auth import *
 from routes.api.category import *
 from routes.api.product import *

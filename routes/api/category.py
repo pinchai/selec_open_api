@@ -1,11 +1,10 @@
-from app import app
+from app import app, jwt_required, get_jwt_identity
 from flask import request, jsonify
 from config import query, execute
-from routes.api.auth import token_required, get_user_id_from_token
 
 
-@app.post("/api/v1/category/lists")
-@token_required
+@app.get("/api/v1/category/lists")
+@jwt_required()
 def get_category_lists():
     """
     Get all category list (JSON)
@@ -39,7 +38,7 @@ def get_category_lists():
                   image: { type: string, example: "electronics.jpg" }
                   user_id: { type: integer, example: 1 }
     """
-    user_id = get_user_id_from_token()
+    user_id = get_jwt_identity()
     try:
         rows = query("SELECT * FROM category WHERE user_id = ?", (user_id,), one=False)
         data = [dict(r) for r in rows] if rows else []
@@ -49,7 +48,7 @@ def get_category_lists():
 
 
 @app.post("/api/v1/category/create")
-@token_required
+@jwt_required()
 def create_category_api():
     """
     Create a new category
@@ -101,9 +100,7 @@ def create_category_api():
     # assert False, name
     if not name:
         return {"status": "error", "message": "Category name is required"}, 400
-
-    user_id = get_user_id_from_token()
-
+    user_id = get_jwt_identity()
     try:
         execute(
             "INSERT INTO category (name, image, user_id) VALUES (?, ?, ?)",
